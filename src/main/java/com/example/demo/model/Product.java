@@ -1,5 +1,7 @@
 package com.example.demo.model; 
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,9 +25,9 @@ public class Product {
     private Long cost ; 
 
     @OneToMany(mappedBy="product")
-    private OrderedProduct orderedProduct ; 
+    private  List<OrderedProduct> orderedProducts ; 
 
     @OneToMany(mappedBy="product") 
-    private AddedToCartProduct addedToCartProduct ;
+    private List<AddedToCartProduct> addedToCartProducts ;
 
 }

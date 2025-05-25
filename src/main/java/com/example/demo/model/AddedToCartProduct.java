@@ -19,7 +19,7 @@ public class AddedToCartProduct {
     private Long id ;
     
     @ManyToOne
-    @JoinColumn(name="userId" , referencedColumnName="id")  
+    @JoinColumn(name="username" , referencedColumnName="username")  
     private User user ;
 
     @ManyToOne

@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,32 +19,18 @@ public class UserService {
      BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder() ;
        
      public User createUser( User user ) { 
-        String email = user.getEmail() ;
+        String username = user.getUsername() ;
 
         String password = user.getPassword() ;  
 
-        String hashedPassword =  passwordEncoder.encode(password) ;   
+        String hashedPassword =  passwordEncoder.encode(password) ;    
 
-        User newUser = new   User( email , hashedPassword ) ;    
+        Set<String> roles  =  new HashSet<>() ;  
+        roles.add("USER") ;
+        User newUser = new   User( username , hashedPassword , roles ) ;    
 
         return userRepository.save(newUser) ;
      }
-
-     public boolean verifyUserByEmail( User user ) {  
-        String email = user.getEmail() ;
-        String password = user.getPassword() ;  
-        String hashedPassword =  passwordEncoder.encode(password) ; 
-        User existingUser =  userRepository.findByEmail(email) ;  
-        return existingUser != null  && existingUser.getPassword().equals(hashedPassword)  ;
-    } 
-       
-    public boolean verifyUserByPhone( User user  ) {  
-        String phone  = user.getPhone() ;
-        String password = user.getPassword() ;  
-        String hashedPassword =  passwordEncoder.encode(password) ; 
-        User existingUser =  userRepository.findByPhone(phone) ;  
-        return existingUser != null  && existingUser.getPassword().equals(hashedPassword)  ;
-    }
 
     public  void  deleteUser(User user ) { 
        Long id =   user.getId() ;

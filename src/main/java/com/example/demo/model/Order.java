@@ -23,13 +23,11 @@ import lombok.NoArgsConstructor;
 public class Order {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id;
-    
+    private Long id ;
     @ManyToOne
-    @JoinColumn(name="userId" , referencedColumnName="id")   // updatable and insertable are true by default. 
+    @JoinColumn(name="username" , referencedColumnName="username")  
     private User user ;
-
     @OneToMany(mappedBy="order")
-    private List<OrderedProduct> orderedProducts ;  
-
+    private List<OrderedProduct> orderedProducts ;   
+    private  Long  TotalCost  ; 
 }
