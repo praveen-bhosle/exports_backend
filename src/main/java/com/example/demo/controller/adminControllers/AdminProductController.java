@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.adminControllers;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ import com.example.demo.service.ProductService;
 
 
 @RestController
-@RequestMapping("/product")
-public class ProductController { 
+@RequestMapping("/api/admin/product")
+public class AdminProductController { 
     
     @Autowired 
     ProductService productService ;  
@@ -29,7 +29,7 @@ public class ProductController {
        return  productService.createProduct(product) ;
     }
 
-    @GetMapping("/") 
+    @GetMapping("") 
     public  List<Product> getAllProducts() { 
         return productService.getAllProducts() ;
     }
@@ -43,7 +43,6 @@ public class ProductController {
     public void deleteProduct(@PathVariable Long id ) { 
         productService.deleteProduct(id);
     } 
-
 
     @PutMapping("/edit") 
     public Product editProduct(@RequestBody Product product) { 

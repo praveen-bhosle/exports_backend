@@ -46,7 +46,6 @@ public class AdminOrderController {
         try { 
          Long  parsedId  =   Long.valueOf(id) ;     
          Order  order  = orderRepository.findById(parsedId).orElse(null) ; 
-         
             Map<String ,  Order> map = new HashMap<>() ; 
             map.put("order", order) ;
             return new  ResponseEntity<>( map ,  HttpStatus.ACCEPTED  ) ;  } 

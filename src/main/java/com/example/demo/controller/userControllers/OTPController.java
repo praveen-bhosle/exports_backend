@@ -1,4 +1,4 @@
-package com.example.demo.controller.publicControllers;
+package com.example.demo.controller.userControllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +13,7 @@ import com.example.demo.service.OTPService;
 
 
 @RestController
-@RequestMapping("/otp")
+@RequestMapping("/api/user/otp")
 public class OTPController {
 
     @Autowired 

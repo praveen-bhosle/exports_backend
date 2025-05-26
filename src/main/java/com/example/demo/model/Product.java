@@ -28,6 +28,6 @@ public class Product {
     private  List<OrderedProduct> orderedProducts ; 
 
     @OneToMany(mappedBy="product") 
-    private List<AddedToCartProduct> addedToCartProducts ;
+    private List<CartProduct> addedToCartProducts ;
 
 }

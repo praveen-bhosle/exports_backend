@@ -2,10 +2,6 @@ package com.example.demo.model;
 
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.example.demo.repository.UserRepository;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EmailVerificationToken {  
   
-    @Autowired UserRepository userRepository ;
+   
 
     @Id
     @GeneratedValue( strategy= GenerationType.IDENTITY )
@@ -33,10 +29,9 @@ public class EmailVerificationToken {
     private User  user  ; 
     private String email ;
 
-    public  EmailVerificationToken( String email   ,  String username  ) {  
+    public  EmailVerificationToken( String email   ,  User user  ) {  
         this.email = email ; 
-        User newUser = userRepository.findByUsername(username) ;
-        user = newUser ; 
+        this.user = user ;
         this.code =   UUID.randomUUID().toString() ; 
     }
 }

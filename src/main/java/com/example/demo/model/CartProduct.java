@@ -7,12 +7,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="AddedToCartProducts")
 @Data
-public class AddedToCartProduct { 
+@NoArgsConstructor
+@AllArgsConstructor
+public class CartProduct { 
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -24,6 +28,11 @@ public class AddedToCartProduct {
 
     @ManyToOne
     @JoinColumn(name="productId" , referencedColumnName="id")
-    private Product product    ;  
+    private Product product    ;   
+
+    public  CartProduct( User user ,  Product product ) { 
+        this.user = user ; 
+        this.product = product ;
+    } 
 
 }

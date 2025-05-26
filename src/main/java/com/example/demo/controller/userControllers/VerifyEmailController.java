@@ -30,11 +30,13 @@ public class VerifyEmailController {
 
 
     @PostMapping("")
-    public ResponseEntity<?> sendVerificationEmail(  @RequestBody  VerifyEmailBody   requestBody   )   {      
+    public ResponseEntity<?> sendVerificationEmail(  @RequestBody  VerifyEmailBody   requestBody   )   {    
+        
 
         try {   
         String email = requestBody.getEmail() ;
-        EmailVerificationToken token  = new   EmailVerificationToken( email ,  username  ) ;   
+        User newUser = userRepository.findByUsername(username) ; 
+        EmailVerificationToken token  = new   EmailVerificationToken( email ,  newUser   ) ;   
         String code = token.getCode() + token.getId().toString() ; 
         String url =  "www.ykdevoutexports.com/api/user/verify-email/" + code  ; 
         tokenRepository.save(token) ; 

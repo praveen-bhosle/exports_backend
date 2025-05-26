@@ -49,7 +49,7 @@ public class User implements  UserDetails   {
 
 
     @OneToMany(mappedBy="user")
-    private List<AddedToCartProduct>  productsAddedToCart ;   
+    private List<CartProduct>  productsAddedToCart ;   
 
      
     public  User( String username ,  String password ,  Set<String> roles )  { 
