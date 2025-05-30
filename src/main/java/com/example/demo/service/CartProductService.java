@@ -21,14 +21,8 @@ public  class CartProductService  {
     @Autowired 
     private UserRepository userRepository ; 
 
-
-    
-
-
     public   boolean  checkIfPresentByProductId ( Product product  )  { 
         String username = GetUsername.getUsername() ;   
-
-        
         List<CartProduct> products  =  cartProductRepository.findByUserUsername(username) ;    
         for(  CartProduct cartProduct : products ) {  
             if ( cartProduct.getProduct().getId().equals( product.getId() )  )   { 
@@ -63,6 +57,11 @@ public  class CartProductService  {
 
     public void deleteFromCart(  Long id   ) { 
     cartProductRepository.deleteById(id) ; 
-    }
+    } 
 
+    public CartProduct editCartProduct( Long id , Long quantity )  {     
+        CartProduct cartProduct = cartProductRepository.findById(id).orElse(null) ; 
+        cartProduct.setQuantity(quantity); 
+        return  cartProductRepository.save(cartProduct) ;
+    } 
 }

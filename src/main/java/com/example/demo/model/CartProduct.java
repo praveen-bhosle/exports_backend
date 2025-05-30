@@ -30,6 +30,8 @@ public class CartProduct {
     @JoinColumn(name="productId" , referencedColumnName="id")
     private Product product    ;   
 
+    private Long quantity ;
+
     public  CartProduct( User user ,  Product product ) { 
         this.user = user ; 
         this.product = product ;

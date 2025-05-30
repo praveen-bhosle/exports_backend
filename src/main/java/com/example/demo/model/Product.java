@@ -16,18 +16,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Product { 
-
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY) 
     private Long id ; 
-
     private Long stock ;
     private Long cost ; 
-
     @OneToMany(mappedBy="product")
     private  List<OrderedProduct> orderedProducts ; 
-
     @OneToMany(mappedBy="product") 
     private List<CartProduct> addedToCartProducts ;
-
+    private String sizeA ; 
+    private String sizeB ; 
 }
