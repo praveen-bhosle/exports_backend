@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.mapper.CartProductMapper;
 import com.example.demo.model.CartProduct;
 import com.example.demo.model.Product;
 import com.example.demo.model.User;
+import com.example.demo.records.CartProductDTO;
 import com.example.demo.repository.CartProductRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.utils.GetUsername;
@@ -20,6 +22,9 @@ public  class CartProductService  {
 
     @Autowired 
     private UserRepository userRepository ; 
+
+    @Autowired 
+    private CartProductMapper cartProductMapper ;
 
     public   boolean  checkIfPresentByProductId ( Product product  )  { 
         String username = GetUsername.getUsername() ;   
@@ -44,9 +49,9 @@ public  class CartProductService  {
         return  cartProductRepository.save(cartProduct) ; 
     }
 
-    public  List<CartProduct>  getCartProducts() { 
+    public  List<CartProductDTO>  getCartProducts() { 
         String username = GetUsername.getUsername() ;   
-        return   cartProductRepository.findByUserUsername(username) ; 
+        return   cartProductRepository.findByUserUsername(username).stream().map(cartProductMapper::toDTO).toList() ; 
     } 
 
     public  boolean  checkIfBelongsToUser( Long id  ) {    

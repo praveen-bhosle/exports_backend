@@ -35,6 +35,7 @@ public class CartProduct {
     public  CartProduct( User user ,  Product product ) { 
         this.user = user ; 
         this.product = product ;
-    } 
+        this.quantity = 500L ; 
+    }  
 
 }

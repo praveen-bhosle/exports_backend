@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Product;
+import com.example.demo.records.ProductDTO;
 import com.example.demo.service.ProductService;
 
 
@@ -30,7 +31,7 @@ public class AdminProductController {
     }
 
     @GetMapping("") 
-    public  List<Product> getAllProducts() { 
+    public  List<ProductDTO> getAllProducts() { 
         return productService.getAllProducts() ;
     }
 

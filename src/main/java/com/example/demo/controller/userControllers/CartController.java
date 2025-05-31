@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.CartProduct;
 import com.example.demo.model.CartProductRequestBody;
 import com.example.demo.model.Product;
+import com.example.demo.records.CartProductDTO;
 import com.example.demo.service.CartProductService;
 import com.example.demo.service.ProductService;
 
@@ -36,8 +36,8 @@ public class CartController {
 
   @GetMapping("") 
    public  ResponseEntity<?>   GetProducts() {  
-        List<CartProduct> products  =  cartProductService.getCartProducts() ;   
-        Map<String,List<CartProduct>> map  = new HashMap<>()  ;  
+        List<CartProductDTO> products  =  cartProductService.getCartProducts() ;   
+        Map<String,List<CartProductDTO>> map  = new HashMap<>()  ;  
         map.put("Products", products) ; 
         return new ResponseEntity<>(  map ,  HttpStatus.ACCEPTED ) ;
    }

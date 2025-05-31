@@ -35,17 +35,17 @@ public class PaymentController {
             @RequestParam("razorpay_payment_id") String razorpayPaymentId,
             @RequestParam("razorpay_signature") String razorpaySignature) throws RazorpayException {
         try {
-            // Verify the payment signature here
+            
             String signature = razorpayOrderId + "|" + razorpayPaymentId;
             boolean isValid = Utils.verifySignature(signature, razorpaySignature, KEY_SECRET);
 
             if (isValid) {
-                // Payment successful
+                
                 RedirectView redirectView = new RedirectView("/success.html?orderId=" + razorpayOrderId);
                 return redirectView;
             } else {
-                // Payment failed
-                return new RedirectView("/failure.html"); // Create failure.html if needed
+                
+                return new RedirectView("/failure.html");
             }
         } catch (RazorpayException e) {
             System.err.println("Razorpay Exception during callback: " + e.getMessage());

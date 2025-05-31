@@ -19,7 +19,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY) 
     private Long id ; 
-    private Long stock ;
+   // private Long stock ;
     private Long cost ; 
     @OneToMany(mappedBy="product")
     private  List<OrderedProduct> orderedProducts ; 
@@ -27,4 +27,5 @@ public class Product {
     private List<CartProduct> addedToCartProducts ;
     private String sizeA ; 
     private String sizeB ; 
+    private String quality ;
 }
