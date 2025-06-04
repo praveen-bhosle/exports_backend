@@ -19,8 +19,10 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.EmailServiceImpl;
 import com.example.demo.utils.GetUsername;
 
+import jakarta.validation.Valid;
+
 @RestController 
-@RequestMapping("/user/verify-email")
+@RequestMapping("/user/verifyEmail")
 public class VerifyEmailController {   
 
     @Autowired EmailServiceImpl emailService ; 
@@ -30,15 +32,14 @@ public class VerifyEmailController {
 
 
     @PostMapping("")
-    public ResponseEntity<?> sendVerificationEmail(  @RequestBody  VerifyEmailBody   requestBody   )   {    
-        
-
+    public ResponseEntity<?> sendVerificationEmail( @Valid  @RequestBody  VerifyEmailBody   requestBody   )   {    
+    
         try {   
         String email = requestBody.getEmail() ;
         User newUser = userRepository.findByUsername(username) ; 
         EmailVerificationToken token  = new   EmailVerificationToken( email ,  newUser   ) ;   
         String code = token.getCode() + token.getId().toString() ; 
-        String url =  "www.ykdevoutexports.com/api/user/verify-email/" + code  ; 
+        String url =  " http://localhost:5000/api/user/verifyEmail/" + code  ; 
         tokenRepository.save(token) ; 
         EmailDetails emailDetails = new EmailDetails(  email ,  "<p>Click on this link to verify your email id.</p><br/> <a href=\" "+  url + "\">"  +  url + "</a>" , "Verification for your YKDevoutExports account."  ,  null  ) ;   
         emailService.sendSimpleMail(emailDetails) ;   

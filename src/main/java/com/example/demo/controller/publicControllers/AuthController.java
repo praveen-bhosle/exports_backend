@@ -1,7 +1,6 @@
 package com.example.demo.controller.publicControllers ;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,18 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping ;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMapping ;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.AuthBody;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.JwtService;
+import com.example.demo.service.UserService;
 
 import jakarta.validation.Valid; 
 
@@ -30,10 +27,10 @@ import jakarta.validation.Valid;
 class AuthController  {   
 
     @Autowired 
-    private  UserRepository userRepository ;  
+    private  UserRepository userRepository ;   
 
-    @Autowired
-    private PasswordEncoder passwordEncoder ; 
+    @Autowired 
+    private UserService userService ; 
 
     @Autowired 
     private AuthenticationManager authenticationManager ; 
@@ -46,14 +43,10 @@ class AuthController  {
 
       User user =  userRepository.findByUsername( authBody.getUsername())  ; 
       if ( user != null  ) {    
-        return   new  ResponseEntity<>(  "Username already exists." ,   HttpStatus.CONFLICT   ) ;
+        return   new  ResponseEntity<>(  "Username already exists."    ,    HttpStatus.CONFLICT   ) ;
       }  
       else {  
-        Set<String>roles = new HashSet<>() ;
-        roles.add("USER") ; 
-        String hashedPassword =   passwordEncoder.encode(authBody.getPassword()) ;
-        User newUser =  new  User( authBody.getUsername() , hashedPassword  ,roles   ) ;   
-        userRepository.save(newUser) ;
+        userService.createUser(user) ; 
         return   new  ResponseEntity<>( "Account created successfully.." ,   HttpStatus.CREATED   ) ;
       }
     } 
@@ -67,14 +60,10 @@ class AuthController  {
   
     try { 
         authenticationManager.authenticate(  new UsernamePasswordAuthenticationToken(username, passwprd) )   ;     
-
         String token  =  jwtSerice.createToken(username) ;  
-
-        MultiValueMap<String,String> multiValueMap   = new  LinkedMultiValueMap<>() ;  
-
-        multiValueMap.add("Authorization" , "Bearer " + token)  ;  
-
-      return  new ResponseEntity<>("Logged in successfully" ,  multiValueMap,    HttpStatus.ACCEPTED) ;
+        HashMap<String,String>  responseBody   = new  HashMap<>() ;  
+        responseBody.put("token" ,  token)  ;   
+      return  new ResponseEntity<>(    responseBody ,     HttpStatus.ACCEPTED) ;
         } 
 
     catch(  BadCredentialsException e  ) { 
