@@ -24,14 +24,12 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}") private String sender;
 
     @Override
-    public String sendSimpleMail(EmailDetails details)
+    public String sendSimpleMail(EmailDetails details) 
     {
         try {
 
             
-            SimpleMailMessage mailMessage
-                = new SimpleMailMessage();
-
+            SimpleMailMessage mailMessage= new SimpleMailMessage();
            
             mailMessage.setFrom(sender);
             mailMessage.setTo(details.getReceiver());
@@ -40,10 +38,11 @@ public class EmailServiceImpl implements EmailService {
 
             
             javaMailSender.send(mailMessage);
-            return "Mail Sent Successfully...";
+            return "Mail Sent Successfully";
         }
 
-        catch (Exception e) {
+        catch (Exception e) { 
+            System.out.println(e);
             return "Error while Sending Mail";
         }
     }

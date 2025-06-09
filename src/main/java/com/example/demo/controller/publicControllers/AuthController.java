@@ -39,14 +39,22 @@ class AuthController  {
     private JwtService jwtSerice; 
      
     @PostMapping("/signup") 
-    public  ResponseEntity<?>  createAccount( @Valid @RequestBody  AuthBody authBody  ) {  
+    public  ResponseEntity<?>  createAccount( @Valid @RequestBody  AuthBody authBody  ) {   
 
-      User user =  userRepository.findByUsername( authBody.getUsername())  ; 
+      System.out.println("Creating account.");  
+
+      System.out.print("Username from body  " + authBody.getUsername());
+
+
+      User user =  userRepository.findByUsername( authBody.getUsername())  ;  
+
+      System.out.println(user);
       if ( user != null  ) {    
         return   new  ResponseEntity<>(  "Username already exists."    ,    HttpStatus.CONFLICT   ) ;
       }  
       else {  
-        userService.createUser(user) ; 
+        System.err.println("Creating user ");
+        userService.createUser( authBody ) ; 
         return   new  ResponseEntity<>( "Account created successfully.." ,   HttpStatus.CREATED   ) ;
       }
     } 

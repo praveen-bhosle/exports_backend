@@ -22,31 +22,38 @@ import com.example.demo.utils.GetUsername;
 import jakarta.validation.Valid;
 
 @RestController 
-@RequestMapping("/user/verifyEmail")
+@RequestMapping("/api/user/verifyEmail")
 public class VerifyEmailController {   
 
     @Autowired EmailServiceImpl emailService ; 
-    @Autowired EmailVerificationTokenRepository tokenRepository ; 
-    String username = GetUsername.getUsername() ;
+    @Autowired EmailVerificationTokenRepository tokenRepository ;
     @Autowired UserRepository userRepository ;
 
 
     @PostMapping("")
-    public ResponseEntity<?> sendVerificationEmail( @Valid  @RequestBody  VerifyEmailBody   requestBody   )   {    
+    public ResponseEntity<?> sendVerificationEmail( @Valid  @RequestBody  VerifyEmailBody   requestBody   ) throws  Exception    {    
     
         try {   
+        System.out.println("Into the email controller now.");
+        String username = GetUsername.getUsername() ;
         String email = requestBody.getEmail() ;
+        System.out.println("Email is  " +email  ); 
+        System.out.println("username is  " + username ); 
         User newUser = userRepository.findByUsername(username) ; 
         EmailVerificationToken token  = new   EmailVerificationToken( email ,  newUser   ) ;   
-        String code = token.getCode() + token.getId().toString() ; 
-        String url =  " http://localhost:5000/api/user/verifyEmail/" + code  ; 
         tokenRepository.save(token) ; 
-        EmailDetails emailDetails = new EmailDetails(  email ,  "<p>Click on this link to verify your email id.</p><br/> <a href=\" "+  url + "\">"  +  url + "</a>" , "Verification for your YKDevoutExports account."  ,  null  ) ;   
-        emailService.sendSimpleMail(emailDetails) ;   
-        return  new ResponseEntity<>("We have sent an verifcation link to " + email  ,  HttpStatus.ACCEPTED   ) ; 
+        String code = token.getCode()  ;
+        String url =  " http://localhost:5000/api/user/verifyEmail/" + code  ; 
+        EmailDetails emailDetails = new EmailDetails(  email ,  "Click on this link to verify your email id. " +  url  , "Verification for your YKDevoutExports account."  ,  null  ) ;   
+        String  a = emailService.sendSimpleMail(emailDetails) ; 
+        System.out.println(a);   
+        if(a.equals("Mail Sent Successfully")) { 
+        return  new ResponseEntity<>("We have sent an verifcation link to " + email  ,  HttpStatus.ACCEPTED   ) ;  } 
+        throw new Exception("Error sening message") ;
     } 
 
-        catch( Exception e  ) { 
+        catch( Exception e  ) {  
+            System.err.println(e.getMessage()); 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR) ; 
          }
     } 
@@ -54,15 +61,14 @@ public class VerifyEmailController {
     @GetMapping("/{url}")
     public ResponseEntity<?>  checkVerificationUrl(@PathVariable String url) {  
         try{ 
-        int size = url.length() ;
-        Long id = Long.valueOf(url.substring(size-2)) ;
-        String code = url.substring(0,size-2) ; 
 
-        EmailVerificationToken token  = tokenRepository.findById(id).orElse(null) ; 
-        String  usernameFromToken = token.getUser().getUsername() ;   
-        String codeFromToken = token.getCode() ;
+        String username = GetUsername.getUsername()  ; 
+        String code = url ;  
+        EmailVerificationToken token  = tokenRepository.findByCode(code) ; 
+        String  usernameFromToken = token.getUser().getUsername() ; 
+        Long id = token.getId() ;  
 
-        if(usernameFromToken.equals(username) && code.equals(codeFromToken)) {  
+        if(usernameFromToken.equals(username) ) {  
 
            User user = userRepository.findByUsername(username) ;
            user.setEmail(token.getEmail());

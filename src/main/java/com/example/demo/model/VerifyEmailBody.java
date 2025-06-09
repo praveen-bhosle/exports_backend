@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VerifyEmailBody {  
-    
     @NotNull
     String email ;     
 }

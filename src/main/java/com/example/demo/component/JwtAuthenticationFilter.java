@@ -1,13 +1,11 @@
 package com.example.demo.component;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -18,7 +16,7 @@ import com.example.demo.service.CustomUserDetailsService;
 import com.example.demo.service.JwtService;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException ;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -63,24 +61,36 @@ public class JwtAuthenticationFilter extends  OncePerRequestFilter   {
         
         if(  username != null  &&  !username.equals("Error")    && SecurityContextHolder.getContext().getAuthentication() == null   ) { 
 
-            System.err.println("Fetching user details."); 
+            System.out.println("Fetching user details."); 
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username) ;  
 
-            System.out.println(userDetails); 
+            System.out.println("users details fetched" + userDetails.getUsername());
+
+           // System.out.println(userDetails); 
 
           //  System.out.println(userDetails.getAuthorities());
-        
-            System.out.println("getting  token");
+          
+           System.err.println("GEtting authorities.");
+          
+           Collection< ? extends GrantedAuthority> authorities  = userDetails.getAuthorities() ;
 
-            List <GrantedAuthority>  auth = new ArrayList<>() ;  
+           System.out.println(authorities);
 
-            auth.add(new SimpleGrantedAuthority("Role_User")) ; 
-        
-           UsernamePasswordAuthenticationToken  authenticationToken = new UsernamePasswordAuthenticationToken( userDetails , null , auth ) ;  
+           System.out.println("Setting up the authentication token.");   
+
+           UsernamePasswordAuthenticationToken  authenticationToken = new UsernamePasswordAuthenticationToken( userDetails , null , userDetails.getAuthorities() ) ;   
+
+           System.out.println("setting detals to authentication token.") ;
 
            authenticationToken.setDetails( new WebAuthenticationDetailsSource().buildDetails(request) );
 
+           System.out.println("setting securityContext") ;
+
            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+           System.out.println("done") ; 
+
+           System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
           }    
 

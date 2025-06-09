@@ -6,4 +6,5 @@ import com.example.demo.model.EmailVerificationToken;
 
 public interface  EmailVerificationTokenRepository extends  JpaRepository<EmailVerificationToken, Long > {
     
+    EmailVerificationToken  findByCode(String code) ;
 }
