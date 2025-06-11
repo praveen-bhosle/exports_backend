@@ -38,7 +38,7 @@ public class CartController {
    public  ResponseEntity<?>   GetProducts() {  
         List<CartProductDTO> products  =  cartProductService.getCartProducts() ;   
         Map<String,List<CartProductDTO>> map  = new HashMap<>()  ;  
-        map.put("Products", products) ; 
+        map.put("cartItems", products) ; 
         return new ResponseEntity<>(  map ,  HttpStatus.ACCEPTED ) ;
    }
 

@@ -61,8 +61,8 @@ public class WebSecurityConfig {
         System.out.println("setting up cors.");
        // System.out.println( SecurityContextHolder.getContext().getAuthentication().getAuthorities() );
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173","https://fancy-cendol-1295ff.netlify.app"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS" ));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
 

@@ -71,9 +71,9 @@ class AuthController  {
         String token  =  jwtSerice.createToken(username) ;  
         HashMap<String,String>  responseBody   = new  HashMap<>() ;  
         responseBody.put("token" ,  token)  ;   
-      return  new ResponseEntity<>(    responseBody ,     HttpStatus.ACCEPTED) ;
-        } 
-
+        responseBody.put("email" ,  userRepository.findByUsername(username).getEmail()) ;
+        return  new ResponseEntity<>(    responseBody ,     HttpStatus.ACCEPTED) ;
+        }
     catch(  BadCredentialsException e  ) { 
        return  new ResponseEntity<>( "Incorrect credentials"  ,  HttpStatus.UNAUTHORIZED   ) ;
     } 

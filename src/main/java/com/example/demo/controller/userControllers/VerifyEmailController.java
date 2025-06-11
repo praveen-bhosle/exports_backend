@@ -34,22 +34,19 @@ public class VerifyEmailController {
     public ResponseEntity<?> sendVerificationEmail( @Valid  @RequestBody  VerifyEmailBody   requestBody   ) throws  Exception    {    
     
         try {   
-        System.out.println("Into the email controller now.");
+        
         String username = GetUsername.getUsername() ;
         String email = requestBody.getEmail() ;
-        System.out.println("Email is  " +email  ); 
-        System.out.println("username is  " + username ); 
         User newUser = userRepository.findByUsername(username) ; 
         EmailVerificationToken token  = new   EmailVerificationToken( email ,  newUser   ) ;   
         tokenRepository.save(token) ; 
         String code = token.getCode()  ;
-        String url =  " http://localhost:5000/api/user/verifyEmail/" + code  ; 
+        String url =  "http://13.61.25.227:5000/api/user/verifyEmail/" + code  ; 
         EmailDetails emailDetails = new EmailDetails(  email ,  "Click on this link to verify your email id. " +  url  , "Verification for your YKDevoutExports account."  ,  null  ) ;   
-        String  a = emailService.sendSimpleMail(emailDetails) ; 
-        System.out.println(a);   
+        String  a = emailService.sendSimpleMail(emailDetails) ;   
         if(a.equals("Mail Sent Successfully")) { 
         return  new ResponseEntity<>("We have sent an verifcation link to " + email  ,  HttpStatus.ACCEPTED   ) ;  } 
-        throw new Exception("Error sening message") ;
+        throw new Exception("Error sending message") ;
     } 
 
         catch( Exception e  ) {  
