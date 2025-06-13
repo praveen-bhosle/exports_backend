@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -28,4 +31,7 @@ public class Product {
     private String sizeA ; 
     private String sizeB ; 
     private String quality ;
+    @ManyToMany
+    @JoinTable( name="product_images", joinColumns=@JoinColumn( name="productId"),inverseJoinColumns=@JoinColumn(name="imageName")  )
+    private List<Image> images  ; 
 }

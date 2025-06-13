@@ -8,5 +8,4 @@ import com.example.demo.records.ProductDTO;
 @Mapper(componentModel="spring")
 public interface ProductMapper { 
   ProductDTO toDTO(Product product) ; 
-  Product toProduct(ProductDTO productDTO  ) ;
 } 
