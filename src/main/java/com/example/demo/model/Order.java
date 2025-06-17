@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name="Orders") 
@@ -28,6 +29,7 @@ public class Order {
     @JoinColumn(name="username" , referencedColumnName="username")  
     private User user ;
     @OneToMany(mappedBy="order")
+    @ToString.Exclude
     private List<OrderedProduct> orderedProducts ;   
     private  Long  TotalCost  ; 
 }

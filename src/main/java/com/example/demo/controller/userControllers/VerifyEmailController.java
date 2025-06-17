@@ -34,7 +34,6 @@ public class VerifyEmailController {
     public ResponseEntity<?> sendVerificationEmail( @Valid  @RequestBody  VerifyEmailBody   requestBody   ) throws  Exception    {    
     
         try {   
-        
         String username = GetUsername.getUsername() ;
         String email = requestBody.getEmail() ;
         User newUser = userRepository.findByUsername(username) ; 
@@ -45,7 +44,7 @@ public class VerifyEmailController {
         EmailDetails emailDetails = new EmailDetails(  email ,  "Click on this link to verify your email id. " +  url  , "Verification for your YKDevoutExports account."  ,  null  ) ;   
         String  a = emailService.sendSimpleMail(emailDetails) ;   
         if(a.equals("Mail Sent Successfully")) { 
-        return  new ResponseEntity<>("We have sent an verifcation link to " + email  ,  HttpStatus.ACCEPTED   ) ;  } 
+        return  new ResponseEntity<>("We have sent an verifcation link to " + email  ,  HttpStatus.OK   ) ;  } 
         throw new Exception("Error sending message") ;
     } 
 

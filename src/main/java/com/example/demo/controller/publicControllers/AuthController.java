@@ -44,8 +44,9 @@ class AuthController  {
       System.out.println("Creating account.");  
 
       System.out.print("Username from body  " + authBody.getUsername());
-
-
+    
+        
+      try { 
       User user =  userRepository.findByUsername( authBody.getUsername())  ;  
 
       System.out.println(user);
@@ -53,26 +54,34 @@ class AuthController  {
         return   new  ResponseEntity<>(  "Username already exists."    ,    HttpStatus.CONFLICT   ) ;
       }  
       else {  
-        System.err.println("Creating user ");
+        System.out.println("Creating user ");
         userService.createUser( authBody ) ; 
         return   new  ResponseEntity<>( "Account created successfully.." ,   HttpStatus.CREATED   ) ;
+      } 
+      } 
+
+      catch( Exception e) { 
+        System.err.println(e); 
+        return new ResponseEntity<>("Internal server error." , HttpStatus.INTERNAL_SERVER_ERROR) ; 
       }
-    } 
+     }  
+
+
 
     @PostMapping("/login")  
 
     public  ResponseEntity<?> login( @Valid @RequestBody AuthBody authBody ) {  
 
       String username = authBody.getUsername() ; 
-      String passwprd = authBody.getPassword() ;  
+      String password = authBody.getPassword() ;  
   
     try { 
-        authenticationManager.authenticate(  new UsernamePasswordAuthenticationToken(username, passwprd) )   ;     
+        authenticationManager.authenticate(  new UsernamePasswordAuthenticationToken(username, password) )   ;     
         String token  =  jwtSerice.createToken(username) ;  
         HashMap<String,String>  responseBody   = new  HashMap<>() ;  
         responseBody.put("token" ,  token)  ;   
         responseBody.put("email" ,  userRepository.findByUsername(username).getEmail()) ;
-        return  new ResponseEntity<>(    responseBody ,     HttpStatus.ACCEPTED) ;
+        return  new ResponseEntity<>(    responseBody ,     HttpStatus.OK ) ;
         }
     catch(  BadCredentialsException e  ) { 
        return  new ResponseEntity<>( "Incorrect credentials"  ,  HttpStatus.UNAUTHORIZED   ) ;

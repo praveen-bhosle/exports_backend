@@ -13,6 +13,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name="Products") 
@@ -33,5 +34,6 @@ public class Product {
     private String quality ;
     @ManyToMany
     @JoinTable( name="product_images", joinColumns=@JoinColumn( name="productId"),inverseJoinColumns=@JoinColumn(name="imageName")  )
+    @ToString.Exclude
     private List<Image> images  ; 
 }

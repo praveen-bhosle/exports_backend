@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -16,5 +17,6 @@ public class Image {
 private String  name ;  
 @ManyToMany(mappedBy="images")
 @JsonIgnore
+@ToString.Exclude
 private List<Product> products ; 
 }
