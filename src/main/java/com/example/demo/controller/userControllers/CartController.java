@@ -39,7 +39,7 @@ public class CartController {
         List<CartProductDTO> products  =  cartProductService.getCartProducts() ;   
         Map<String,List<CartProductDTO>> map  = new HashMap<>()  ;  
         map.put("cartItems", products) ; 
-        return new ResponseEntity<>(  map ,  HttpStatus.ACCEPTED ) ;
+        return new ResponseEntity<>(  map ,  HttpStatus.OK) ;
    }
 
    @PostMapping("/{id}") 
@@ -75,7 +75,7 @@ public class CartController {
         boolean verified = cartProductService.checkIfBelongsToUser(cartProductId) ;  
         if( !verified ) { return  new ResponseEntity<>(   HttpStatus.BAD_REQUEST ) ; }
         cartProductService.deleteFromCart(cartProductId);
-        return  new ResponseEntity<>("Product added to cart" , HttpStatus.CREATED) ; }  
+        return  new ResponseEntity<>("Product added to cart" , HttpStatus.OK) ; }  
         catch( NumberFormatException e   ) { 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST) ; 
         } 
@@ -93,7 +93,7 @@ public class CartController {
             return new ResponseEntity<>( HttpStatus.BAD_REQUEST ) ; 
         } 
         cartProductService.editCartProduct(id, quanity) ;
-        return new ResponseEntity<>("Product edited" ,HttpStatus.ACCEPTED)  ; 
+        return new ResponseEntity<>("Product edited" ,HttpStatus.OK)  ; 
       } 
       catch( Exception e  ){ 
         System.out.println(e.getMessage()) ;
