@@ -1,6 +1,5 @@
 package com.example.demo.model;
 
-
 import java.util.List;
 
 import com.example.demo.enums.RoleEnum;
@@ -39,8 +38,13 @@ public class User    {
     private String username ; 
 
     private String password ; 
+    @Column(unique=true)
     private String email ; 
  
+    @Column(unique=true) 
+    private String phone ; 
+
+
     @OneToMany(mappedBy="user" , fetch=FetchType.LAZY)
     @ToString.Exclude
     private List<Order> orders ; 

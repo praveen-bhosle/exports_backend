@@ -31,5 +31,11 @@ public class OrderedProduct {
     private Order order ;
 
     private Long quantity; 
+
+    public OrderedProduct( Product product ,  Order order   ,  Long quanity ) { 
+        this.product =  product ;
+        this.order = order ; 
+        this.quantity = quanity ; 
+    }
     
 }

@@ -1,23 +1,31 @@
 package com.example.demo.controller.userControllers ;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
 
+import com.example.demo.records.TransactionDTO;
+import com.example.demo.service.TransactionService;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import com.razorpay.Utils;
 
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("/api/user/payment") 
+@RequestMapping("/api/public/payment") 
 public class PaymentController {
 
-    private static final String KEY_ID = "rzp_test_thbnstH0Bq80hy"; // Replace with your Key ID
-    private static final String KEY_SECRET = "oc86adrgm685ECs3Wzdk0nOb"; // Replace with your Key Secret
+    private static final String KEY_ID = "rzp_test_ehxRg1TmkA0kFi"; 
+    private static final String KEY_SECRET = "PDuHjMBQE4iMBMdcVKbScw2J"; 
+
+    @Autowired 
+    private TransactionService transactionService ; 
 
     @PostMapping("/create-order")
     public String createOrder(@RequestParam("amount") int amount) throws RazorpayException {
@@ -30,22 +38,22 @@ public class PaymentController {
     }
 
     @PostMapping("/payment-callback")
-    public RedirectView paymentCallback(
-            @RequestParam("razorpay_order_id") String razorpayOrderId,
-            @RequestParam("razorpay_payment_id") String razorpayPaymentId,
-            @RequestParam("razorpay_signature") String razorpaySignature) throws RazorpayException {
+    public String  paymentCallback(@Valid @RequestBody TransactionDTO transactionDTO) throws RazorpayException {
         try {
             
+            String razorpayOrderId = transactionDTO.razorpay_order_id() ;
+            String razorpayPaymentId =transactionDTO.razorpay_payment_id() ;
+            String razorpaySignature = transactionDTO.razorpay_signatue() ;
+             
             String signature = razorpayOrderId + "|" + razorpayPaymentId;
             boolean isValid = Utils.verifySignature(signature, razorpaySignature, KEY_SECRET);
 
             if (isValid) {
-                
-                RedirectView redirectView = new RedirectView("/success.html?orderId=" + razorpayOrderId);
-                return redirectView;
+                transactionService.createTransaction(transactionDTO) ; 
+                return "Payment is successfull." ; 
             } else {
                 
-                return new RedirectView("/failure.html");
+              return  "The payment is not legit. Transaction incomplete."  ; 
             }
         } catch (RazorpayException e) {
             System.err.println("Razorpay Exception during callback: " + e.getMessage());

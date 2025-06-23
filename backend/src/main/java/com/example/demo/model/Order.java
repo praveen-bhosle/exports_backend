@@ -32,4 +32,9 @@ public class Order {
     @ToString.Exclude
     private List<OrderedProduct> orderedProducts ;   
     private  Long  TotalCost  ; 
+
+    public  Order( Long TotalCost ,  User user ) { 
+        this.TotalCost = TotalCost ;
+        this.user = user  ; 
+    }
 }
