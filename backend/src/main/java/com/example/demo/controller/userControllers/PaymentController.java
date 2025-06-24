@@ -2,6 +2,8 @@ package com.example.demo.controller.userControllers ;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.records.TransactionDTO;
-import com.example.demo.service.TransactionService;
+import com.example.demo.service.OrderService;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
@@ -18,49 +20,58 @@ import com.razorpay.Utils;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/public/payment") 
+@RequestMapping("/api/user/payment") 
 public class PaymentController {
 
     private static final String KEY_ID = "rzp_test_ehxRg1TmkA0kFi"; 
-    private static final String KEY_SECRET = "PDuHjMBQE4iMBMdcVKbScw2J"; 
+    private static final String KEY_SECRET = "PDuHjMBQE4iMBMdcVKbScw2J";  
 
     @Autowired 
-    private TransactionService transactionService ; 
+    private OrderService orderService ; 
+
 
     @PostMapping("/create-order")
-    public String createOrder(@RequestParam("amount") int amount) throws RazorpayException {
+    public ResponseEntity<?> createOrder(@RequestParam("amount") int amount) throws RazorpayException {
+        try { 
         RazorpayClient razorpay = new RazorpayClient(KEY_ID, KEY_SECRET);
         JSONObject orderRequest = new JSONObject();
         orderRequest.put("amount", amount * 100);
         orderRequest.put("currency", "INR");
-        Order order = razorpay.orders.create(orderRequest);
-        return order.toString();
+        Order order = razorpay.orders.create(orderRequest); 
+        String order_id   = order.get("id") ; 
+        Long amountInLong =  Long.valueOf(amount) ; 
+        orderService.createOrder(order_id , amountInLong) ;  
+        return  new ResponseEntity<>(  order.toString() ,  HttpStatus.CREATED ) ; }
+        catch( Exception  e) {  
+            System.err.println(e.getMessage()); 
+            return new ResponseEntity<>( "Internal server error. Failed to create order." , HttpStatus.INTERNAL_SERVER_ERROR ) ; 
+        } 
     }
 
     @PostMapping("/payment-callback")
-    public String  paymentCallback(@Valid @RequestBody TransactionDTO transactionDTO) throws RazorpayException {
+    public ResponseEntity<?>  paymentCallback(@Valid @RequestBody TransactionDTO transactionDTO  ,  @RequestParam String orderId  ) throws RazorpayException {
         try {
-            
             String razorpayOrderId = transactionDTO.razorpay_order_id() ;
             String razorpayPaymentId =transactionDTO.razorpay_payment_id() ;
             String razorpaySignature = transactionDTO.razorpay_signatue() ;
-             
             String signature = razorpayOrderId + "|" + razorpayPaymentId;
-            boolean isValid = Utils.verifySignature(signature, razorpaySignature, KEY_SECRET);
-
-            if (isValid) {
-                transactionService.createTransaction(transactionDTO) ; 
-                return "Payment is successfull." ; 
-            } else {
-                
-              return  "The payment is not legit. Transaction incomplete."  ; 
+            boolean isValid = Utils.verifySignature(signature, razorpaySignature, KEY_SECRET); 
+            System.err.println( "validation result : "  + isValid) ; 
+            if (isValid) { 
+                orderService.ValidateOrder(orderId, transactionDTO);
+                return  new ResponseEntity<>( "Payment is successfull.", HttpStatus.OK )  ; 
+            } 
+            else {
+              return new ResponseEntity<>(  "The payment is not legit.Transaction incomplete." , HttpStatus.BAD_REQUEST )   ; 
             }
-        } catch (RazorpayException e) {
+        } 
+        catch (RazorpayException e) {
             System.err.println("Razorpay Exception during callback: " + e.getMessage());
-            throw e;
-        } catch (Exception e) {
+            return new ResponseEntity<>("internal server error" ,  HttpStatus.INTERNAL_SERVER_ERROR) ; 
+        } 
+        catch (Exception e) {
             System.err.println("General Exception during callback: " + e.getMessage());
-            throw new RazorpayException("General exception during callback");
+            return new  ResponseEntity<>("General exception during callback" ,  HttpStatus.INTERNAL_SERVER_ERROR ); 
         }
     }
 
@@ -68,4 +79,5 @@ public class PaymentController {
     public String getKey() {
         return KEY_ID;
     }
+
 }

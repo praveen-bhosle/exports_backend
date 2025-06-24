@@ -52,7 +52,14 @@ public  class CartProductService  {
     public  List<CartProductDTO>  getCartProducts() { 
         String username = GetUsername.getUsername() ;   
         return   cartProductRepository.findByUserUsername(username).stream().map(cartProductMapper::toDTO).toList() ; 
-    } 
+    }  
+
+    public List<CartProduct> getRawCartProducts() { 
+        String username = GetUsername.getUsername() ; 
+        return  cartProductRepository.findByUserUsername(username) ; 
+    }
+
+
 
     public  boolean  checkIfBelongsToUser( Long id  ) {    
         CartProduct cartProduct  = cartProductRepository.findById(id).orElse(null) ;  
@@ -68,5 +75,5 @@ public  class CartProductService  {
         CartProduct cartProduct = cartProductRepository.findById(id).orElse(null) ; 
         cartProduct.setQuantity(quantity); 
         return  cartProductRepository.save(cartProduct) ;
-    } 
+    }  
 }

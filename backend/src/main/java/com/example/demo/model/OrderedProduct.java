@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +30,7 @@ public class OrderedProduct {
 
     @ManyToOne
     @JoinColumn(name="orderId" , referencedColumnName="id") 
+    @JsonIgnore
     private Order order ;
 
     private Long quantity; 

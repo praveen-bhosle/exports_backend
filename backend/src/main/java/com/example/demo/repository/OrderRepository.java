@@ -8,11 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.model.Order;
 
 @Repository
-public interface  OrderRepository extends   JpaRepository< Order , Long > {    
-
-    
-
-      public List<Order> getOrdersByUserUsername( String username ) ; 
-   
-
+public interface  OrderRepository extends   JpaRepository< Order , String > {    
+      public List<Order> findByUserUsername( String username ) ; 
 } 

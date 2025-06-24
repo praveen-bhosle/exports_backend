@@ -18,5 +18,9 @@ public class OrderedProductService {
     public void create(Product product ,  Long quantity ,  Order order   ) {   
         OrderedProduct orderedProduct = new OrderedProduct( product , order ,  quantity  ) ;  
         orderedProductRepository.save(orderedProduct) ; 
-    }   
+    }
+    
+    
+
+
 }

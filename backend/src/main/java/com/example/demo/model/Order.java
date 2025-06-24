@@ -3,13 +3,14 @@ package com.example.demo.model;
 
 import java.util.List;
 
+import com.example.demo.enums.OrderStatusEnum;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,18 +24,24 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Order {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id ;
+    private String id ;
     @ManyToOne
     @JoinColumn(name="username" , referencedColumnName="username")  
     private User user ;
     @OneToMany(mappedBy="order")
     @ToString.Exclude
     private List<OrderedProduct> orderedProducts ;   
-    private  Long  TotalCost  ; 
+    private  Long  totalCost  ; 
+    private OrderStatusEnum orderStatus = OrderStatusEnum.UNPAID ;
 
-    public  Order( Long TotalCost ,  User user ) { 
-        this.TotalCost = TotalCost ;
+    @OneToOne
+    @JoinColumn(name="transaction_id")
+    private Transaction transaction ; 
+
+    public  Order( String id , Long totalCost ,  User user ) { 
+        this.id = id ; 
+        this.totalCost = totalCost ;
         this.user = user  ; 
     }
+
 }

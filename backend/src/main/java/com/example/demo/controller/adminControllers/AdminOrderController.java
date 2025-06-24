@@ -32,8 +32,6 @@ public class AdminOrderController {
 
     @GetMapping("/byUserId/{username}") 
     public  ResponseEntity<?> getOrdersByUserId( @PathVariable String username  )   {   
-    
-        
         List<Order> orders = orderRepository.getOrdersByUserUsername(username) ;  
         Map<String,List<Order>> map  = new HashMap<>() ;  
         map.put( "orders"  , orders ) ;
@@ -43,9 +41,8 @@ public class AdminOrderController {
     @GetMapping("/{id}") 
     public  ResponseEntity<?> byId( @PathVariable String  id  ) {  
   
-        try { 
-         Long  parsedId  =   Long.valueOf(id) ;     
-         Order  order  = orderRepository.findById(parsedId).orElse(null) ; 
+        try {    
+         Order  order  = orderRepository.findById(id).orElse(null) ; 
             Map<String ,  Order> map = new HashMap<>() ; 
             map.put("order", order) ;
             return new  ResponseEntity<>( map ,  HttpStatus.ACCEPTED  ) ;  } 
