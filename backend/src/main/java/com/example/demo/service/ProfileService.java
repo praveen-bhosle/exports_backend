@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +39,7 @@ public class ProfileService {
      return userProfile != null ;
     }
  
-    public boolean  checkProfileBelongs( Long id  ) {   
+    public boolean  checkProfileBelongs( UUID id  ) {   
         String username = GetUsername.getUsername() ; 
         return id.equals(userRepository.findByUsername(username).getProfile().getId() ) ;
     }
@@ -55,7 +57,7 @@ public class ProfileService {
         profileRepository.save(userProfile) ; 
     }
 
-    public void deleteProfile(Long id ){ 
+    public void deleteProfile(UUID id ){ 
         profileRepository.deleteById(id);  
     }
 }

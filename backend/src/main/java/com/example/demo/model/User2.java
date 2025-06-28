@@ -3,6 +3,7 @@ package com.example.demo.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +16,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,8 +28,8 @@ import lombok.NoArgsConstructor;
 public class User2 implements  UserDetails   {   
  
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY ) 
-    private Long id ; 
+    @GeneratedValue
+    private UUID id ; 
 
     @Column(unique=true) 
     private String username ; 

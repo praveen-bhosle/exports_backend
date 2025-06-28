@@ -1,6 +1,7 @@
 
 package  com.example.demo.service ;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public  class CartProductService  {
         return false ; 
     } 
 
-    public boolean   checkIfPresentById( Long id  ) { 
+    public boolean   checkIfPresentById( UUID id  ) { 
         CartProduct cartProduct = cartProductRepository.findById(id ).orElse(null) ;   
         return  cartProduct != null ; 
     }
@@ -61,17 +62,17 @@ public  class CartProductService  {
 
 
 
-    public  boolean  checkIfBelongsToUser( Long id  ) {    
+    public  boolean  checkIfBelongsToUser( UUID id  ) {    
         CartProduct cartProduct  = cartProductRepository.findById(id).orElse(null) ;  
         String username = GetUsername.getUsername() ; 
         return  cartProduct != null &&  cartProduct.getUser().getUsername().equals(username) ;
     }
 
-    public void deleteFromCart(  Long id   ) { 
+    public void deleteFromCart(  UUID id   ) { 
     cartProductRepository.deleteById(id) ; 
     } 
 
-    public CartProduct editCartProduct( Long id , Long quantity )  {     
+    public CartProduct editCartProduct( UUID id , Long quantity )  {     
         CartProduct cartProduct = cartProductRepository.findById(id).orElse(null) ; 
         cartProduct.setQuantity(quantity); 
         return  cartProductRepository.save(cartProduct) ;

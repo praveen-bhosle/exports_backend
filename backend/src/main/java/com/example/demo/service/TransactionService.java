@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class TransactionService {
     } 
     
     public boolean verifyTransaction( TransactionDTO transactionDTO  ) {  
-        Long id = transactionDTO.id() ; 
+        UUID id = transactionDTO.id() ; 
         if(id == null ) return false ;  
         Transaction transaction = transactionRepository.findById(id).orElse(null)  ;
         if(transaction == null )  return false ; 

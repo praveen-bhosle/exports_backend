@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,12 +54,13 @@ public void   editAddress(AddressDTO addressDTO) {
     addressRepository.save(newAddress) ; 
 }
 
-public  void  deleteAddress( Long id  )  { 
+public  void  deleteAddress( UUID id  )  {  
+
     Address address = addressRepository.findById(id).orElse(null)  ;  
     if(address!= null ) addressRepository.delete(address);  
 }
 
-public boolean  validate(Long id ) {    
+public boolean  validate(UUID id ) {    
     String username =  GetUsername.getUsername() ; 
     Address address  = addressRepository.findById(id).orElse(null) ; 
     return  address != null && address.getUser().getUsername().equals(username)  ;

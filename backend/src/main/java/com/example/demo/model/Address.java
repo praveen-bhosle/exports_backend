@@ -1,9 +1,10 @@
 package com.example.demo.model;
 
+import java.util.UUID;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,8 +21,8 @@ import lombok.NoArgsConstructor;
 @Table(name="address")
 public class Address { 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id ; 
+    @GeneratedValue
+    private UUID id ; 
 
     @NotNull
     private String fullName     ; 

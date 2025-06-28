@@ -30,14 +30,6 @@ public class AdminOrderController {
         return  new ResponseEntity<>(  map  ,  HttpStatus.ACCEPTED ) ; 
     } 
 
-    @GetMapping("/byUserId/{username}") 
-    public  ResponseEntity<?> getOrdersByUserId( @PathVariable String username  )   {   
-        List<Order> orders = orderRepository.getOrdersByUserUsername(username) ;  
-        Map<String,List<Order>> map  = new HashMap<>() ;  
-        map.put( "orders"  , orders ) ;
-        return  new ResponseEntity<>(  map  ,  HttpStatus.ACCEPTED ) ; 
-    }   
-
     @GetMapping("/{id}") 
     public  ResponseEntity<?> byId( @PathVariable String  id  ) {  
   
@@ -51,3 +43,14 @@ public class AdminOrderController {
         }
     } 
  }
+
+
+ /* 
+  @GetMapping("/byUserId/{username}") 
+    public  ResponseEntity<?> getOrdersByUserId( @PathVariable String username  )   {   
+        List<Order> orders = orderRepository.getOrdersByUserUsername() ;  
+        Map<String,List<Order>> map  = new HashMap<>() ;  
+        map.put( "orders"  , orders ) ;
+        return  new ResponseEntity<>(  map  ,  HttpStatus.ACCEPTED ) ; 
+    }   
+  */

@@ -1,6 +1,7 @@
 package com.example.demo.controller.adminControllers;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,12 +37,12 @@ public class AdminProductController {
     }
 
     @GetMapping("/{id}") 
-    public Product getProduct(@PathVariable Long id ) { 
+    public Product getProduct(@PathVariable UUID id ) { 
         return productService.getProductById(id) ;
     }
 
     @DeleteMapping("/{id}") 
-    public void deleteProduct(@PathVariable Long id ) { 
+    public void deleteProduct(@PathVariable UUID id ) { 
         productService.deleteProduct(id);
     } 
 

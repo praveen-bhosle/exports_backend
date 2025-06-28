@@ -1,5 +1,7 @@
 package com.example.demo.controller.userControllers;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.records.ProfileDTO;
@@ -53,7 +56,7 @@ ProfileService profileService ;
  @PutMapping("") 
  public ResponseEntity<?> editProfile( @Valid @RequestBody ProfileDTO profileDTO ) { 
     try { 
-    Long id = profileDTO.id() ; 
+    UUID id = profileDTO.id() ; 
     if(id==null) {  return  new ResponseEntity<>("Id field is missing" , HttpStatus.BAD_REQUEST)  ;  }  
     if(!profileService.checkProfileBelongs(id)) {  return  new ResponseEntity<>("The profile sent for editing does not belongs to you." , HttpStatus.BAD_REQUEST)  ;  }  
     profileService.editProfile(profileDTO);
@@ -65,7 +68,7 @@ ProfileService profileService ;
  }
 
  @DeleteMapping("")
- public ResponseEntity<?> deleteProfile( @Valid @RequestBody Long id  ) { 
+ public ResponseEntity<?> deleteProfile( @Valid @RequestParam UUID id  ) { 
     try { 
         if(!profileService.checkProfileBelongs(id)) {  return  new ResponseEntity<>("The profile sent for editing does not belongs to you." , HttpStatus.BAD_REQUEST)  ;  }  
         profileService.deleteProfile(id);
@@ -75,5 +78,4 @@ ProfileService profileService ;
         return new ResponseEntity<>("Internal server error" , HttpStatus.INTERNAL_SERVER_ERROR) ;
     }
  }
- 
 }

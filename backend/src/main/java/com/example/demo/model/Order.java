@@ -1,7 +1,11 @@
 package com.example.demo.model;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.demo.enums.OrderStatusEnum;
 
@@ -31,12 +35,20 @@ public class Order {
     @OneToMany(mappedBy="order")
     @ToString.Exclude
     private List<OrderedProduct> orderedProducts ;   
-    private  Long  totalCost  ; 
+    private Long  totalCost  ; 
     private OrderStatusEnum orderStatus = OrderStatusEnum.UNPAID ;
 
     @OneToOne
     @JoinColumn(name="transaction_id")
     private Transaction transaction ; 
+
+    @CreationTimestamp
+    private LocalDateTime createdAt ; 
+
+    @UpdateTimestamp 
+    private LocalDateTime updatedAt ; 
+
+
 
     public  Order( String id , Long totalCost ,  User user ) { 
         this.id = id ; 

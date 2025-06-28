@@ -1,9 +1,11 @@
 package com.example.demo.records;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.NotNull;
 
 public record  AddressDTO ( 
-    Long id , 
+    UUID id , 
     @NotNull
     String fullName ,
     @NotNull 

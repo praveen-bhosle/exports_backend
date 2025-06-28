@@ -1,10 +1,11 @@
 package com.example.demo.model;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,8 +22,8 @@ import lombok.NoArgsConstructor;
 public class OrderedProduct {  
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id ; 
+    @GeneratedValue
+    private UUID id ; 
 
     @ManyToOne
     @JoinColumn(name="productId" , referencedColumnName= "id") 

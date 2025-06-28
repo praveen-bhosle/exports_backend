@@ -1,6 +1,7 @@
 package com.example.demo.controller.userControllers;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -66,7 +67,7 @@ public class AddressController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAddress(@PathVariable Long id ) {  
+    public ResponseEntity<?> deleteAddress(@PathVariable UUID id ) {  
         try { 
             boolean validation = addressService.validate(id) ; 
             if(!validation) { return new ResponseEntity<>("Invalid reqeust body." ,  HttpStatus.BAD_REQUEST) ;  } 

@@ -1,15 +1,18 @@
 package com.example.demo.service; 
+import java.util.UUID;
+
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.model.ResetPasswordTokenResult;
 import com.example.demo.utils.time;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders ;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys ;
 import jakarta.annotation.PostConstruct;
 
 
@@ -37,7 +40,7 @@ public void initKey() {
         return "Error" ; 
       }
     } 
-    
+     
     public  boolean verifyToken( String token  , String username  ) throws JwtException { 
       try {  
       return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().getSubject().equals(username) ;  
@@ -56,4 +59,20 @@ public void initKey() {
         return  "Error" ;
       }
     } 
+
+
+    public ResetPasswordTokenResult verifyResetPasswordToken( String token  ) { 
+      ResetPasswordTokenResult res = new ResetPasswordTokenResult() ; 
+      try {  
+         String subject =   Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().getSubject() ;   
+         UUID  id = UUID.fromString(subject) ; 
+         res.setId(id);
+         res.setStatus(true);
+         return res ; 
+      }  
+        catch( JwtException | IllegalArgumentException e   ) {  
+          System.out.println(e.getMessage()) ;  
+          return res; 
+        }
+     }
 }  

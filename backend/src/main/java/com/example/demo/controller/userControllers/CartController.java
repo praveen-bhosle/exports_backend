@@ -3,6 +3,7 @@ package com.example.demo.controller.userControllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,11 +44,10 @@ public class CartController {
    }
 
    @PostMapping("/{id}") 
-   public ResponseEntity<?> AddProduct(  @PathVariable String id   ) {  
+   public ResponseEntity<?> AddProduct(  @PathVariable UUID id   ) {  
  
     try {  
-    Long productId = Long.valueOf(id) ;  
-    Product product = productService.getProductById(productId);    
+    Product product = productService.getProductById(id);     
     if( product == null  ) { 
         return   new ResponseEntity<>(HttpStatus.BAD_REQUEST) ; 
     } 
@@ -68,13 +68,12 @@ public class CartController {
     } 
 
    @DeleteMapping("/{id}") 
-   public ResponseEntity<?>   DeleteProducts( @PathVariable  String  id  ) { 
+   public ResponseEntity<?>   DeleteProducts( @PathVariable  UUID  id  ) { 
  
     try {  
-        Long cartProductId  = Long.valueOf(id) ; 
-        boolean verified = cartProductService.checkIfBelongsToUser(cartProductId) ;  
+        boolean verified = cartProductService.checkIfBelongsToUser(id) ;  
         if( !verified ) { return  new ResponseEntity<>(   HttpStatus.BAD_REQUEST ) ; }
-        cartProductService.deleteFromCart(cartProductId);
+        cartProductService.deleteFromCart(id);
         return  new ResponseEntity<>("Product added to cart" , HttpStatus.OK) ; }  
         catch( NumberFormatException e   ) { 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST) ; 
@@ -87,7 +86,7 @@ public class CartController {
    @PutMapping("")
    public ResponseEntity<?> EditProduct( @Valid @RequestBody CartProductRequestBody  cartProduct  ) {   
       try { 
-        Long id = cartProduct.getId();
+        UUID id = cartProduct.getId();
         Long quanity = cartProduct.getQuantity() ;
         if(!cartProductService.checkIfBelongsToUser(id))  { 
             return new ResponseEntity<>( HttpStatus.BAD_REQUEST ) ; 
