@@ -61,14 +61,18 @@ public class UserService {
        userRepository.deleteById(id);
     } 
 
-    public UserDTO  getUser( ) {  
+    public UserDTO  getUserDTO( ) {  
       String username = GetUsername.getUsername() ;  
       User user = userRepository.findByUsername(username) ; 
       return userMapper.userDTO(user) ; 
     } 
 
+    public User getUserByUsername(String username){ 
+      return userRepository.findByUsername(username) ; 
+    }
+
    
-    public UserDTO  getUserByUsername(String username) { 
+    public UserDTO  getUserDTOByUsername(String username) { 
       User user = userRepository.findByUsername(username) ; 
       return userMapper.userDTO(user) ; 
     } 
@@ -88,7 +92,6 @@ public class UserService {
        EmailDetails emailDetails = new EmailDetails( email ,  emailTemplate.getBody() , emailTemplate.getSubject() ,   null  )  ;   
        rabbitMQService.sendMessage(emailDetails);
     } 
-
 
 
 

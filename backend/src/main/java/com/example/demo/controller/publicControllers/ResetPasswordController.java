@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.enums.EmailTypeEnum;
@@ -46,7 +45,7 @@ public class ResetPasswordController {
 
     @PostMapping("/createOTP") 
     public ResponseEntity<?> createOTP( @RequestParam String username ) {   
-        UserDTO user = userService.getUserByUsername(username) ; 
+        UserDTO user = userService.getUserDTOByUsername(username) ; 
         if(user==null) { return  new ResponseEntity<>("Username does not exist in database." , HttpStatus.BAD_REQUEST) ;  }
         if(user.email()==null) { return  new ResponseEntity<>("The username is not connected with any email address." ,  HttpStatus.BAD_REQUEST  ) ; } 
         OTP otp =  otpService.createOTP(username) ; 

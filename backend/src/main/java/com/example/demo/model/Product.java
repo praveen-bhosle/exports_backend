@@ -37,8 +37,10 @@ public class Product {
     private String sizeA ; 
     private String sizeB ; 
     private String quality ;
+    private Long stock ; 
     @ManyToMany
     @JoinTable( name="product_images", joinColumns=@JoinColumn( name="productId"),inverseJoinColumns=@JoinColumn(name="imageName")  )
     @ToString.Exclude
     private List<Image> images  ; 
+
 }

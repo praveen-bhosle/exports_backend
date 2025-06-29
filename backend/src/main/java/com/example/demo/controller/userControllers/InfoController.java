@@ -18,7 +18,7 @@ public class InfoController {
 
     @GetMapping("")
     public ResponseEntity<?> getUserDetils() { 
-        return new ResponseEntity<>(  userService.getUser()  , HttpStatus.OK) ; 
+        return new ResponseEntity<>(  userService.getUserDTO()  , HttpStatus.OK) ; 
     }
 
 }

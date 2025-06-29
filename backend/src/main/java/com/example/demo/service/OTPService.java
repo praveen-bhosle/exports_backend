@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Random;
 import java.util.UUID;
 
@@ -53,7 +55,7 @@ public class OTPService {
         otp.setStatus(OTPStatus.VERIFIED);
         otpRepository.save(otp) ; 
         UUID id  = otp.getId() ; 
-        String token  = jwtService.createToken(id.toString()) ;  
+        String token  = jwtService.createToken(id.toString() ,  Instant.now().plus(5,ChronoUnit.MINUTES) )  ;  
         return token  ;
     }
 
