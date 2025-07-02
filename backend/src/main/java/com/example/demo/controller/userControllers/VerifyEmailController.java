@@ -1,5 +1,6 @@
 package com.example.demo.controller.userControllers;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import com.example.demo.repository.UserRepository ;
 import com.example.demo.service.RabbitMQService;
 import com.example.demo.utils.GetUsername;
 import com.example.dto.EmailDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.validation.Valid;
 
@@ -31,7 +33,11 @@ public class VerifyEmailController {
     @Autowired EmailVerificationTokenRepository tokenRepository ;
     @Autowired UserRepository userRepository ;
 
-    @Autowired RabbitMQService rabbitMQService ; 
+    @Autowired RabbitMQService rabbitMQService ;   
+
+
+
+
 
     @PostMapping("")
     public ResponseEntity<?> sendVerificationEmail( @Valid  @RequestBody  VerifyEmailBody   requestBody   ) throws  Exception    {    
@@ -43,9 +49,11 @@ public class VerifyEmailController {
         EmailVerificationToken token  = new   EmailVerificationToken( email ,  newUser   ) ;   
         tokenRepository.save(token) ; 
         String code = token.getCode()  ;
-        String url =  "http://13.61.25.227:5000/api/user/verifyEmail/" + code  ; 
+        String url = "https://fancy-cendol-1295ff.netlify.app/auth/verifyEmail2?code=" + code  ; 
         EmailDetails emailDetails = new EmailDetails(  email ,  "Click on this link to verify your email id. " +  url  , "Verification for your YKDevoutExports account."  ,  null  ) ;   
-        rabbitMQService.sendMessage(emailDetails); 
+        ObjectMapper objectMapper = new ObjectMapper() ; 
+        String json = objectMapper.writeValueAsString(emailDetails) ; 
+        rabbitMQService.sendMessage(json); 
         return  new ResponseEntity<>("We have sent an verifcation link to " + email  ,  HttpStatus.OK   ) ;  
     } 
 
@@ -65,22 +73,25 @@ public class VerifyEmailController {
         String  usernameFromToken = token.getUser().getUsername() ; 
         UUID id = token.getId() ;  
 
-        if(usernameFromToken.equals(username) ) {  
+        if(!Instant.now().isBefore(token.getExpireInstant()))  { 
+            return new ResponseEntity<>( "Link expired." , HttpStatus.BAD_REQUEST ) ; 
+         }
 
+        if(usernameFromToken.equals(username )) {  
            User user = userRepository.findByUsername(username) ;
            user.setEmail(token.getEmail());
            userRepository.save(user) ;
            tokenRepository.deleteById(id);
-           return  new ResponseEntity<>("Email verified successfully." ,  HttpStatus.CREATED)  ; 
+           return  new ResponseEntity<>("Email verified successfully." ,  HttpStatus.OK)  ; 
         } 
 
-        return  new ResponseEntity<>( HttpStatus.UNAUTHORIZED ) ; 
+        return  new ResponseEntity<>( "Not authorized." ,  HttpStatus.UNAUTHORIZED ) ; 
         } 
         catch( NumberFormatException | NullPointerException e  ) { 
-            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST) ;
+            return  new ResponseEntity<>( "Bad request" ,  HttpStatus.BAD_REQUEST) ;
         } 
         catch( Exception e  ) { 
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR) ; 
+            return new ResponseEntity<>( "Internal server error" ,  HttpStatus.INTERNAL_SERVER_ERROR) ; 
         }
     } 
 }

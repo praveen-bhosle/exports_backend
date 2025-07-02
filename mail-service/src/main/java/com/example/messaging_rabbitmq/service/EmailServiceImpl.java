@@ -6,6 +6,7 @@ import java.io.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -42,12 +43,13 @@ public class EmailServiceImpl implements EmailService {
             return "Mail Sent Successfully";
         }
 
-        catch (Exception e) { 
+        catch ( MailException e) { 
             System.out.println(e);
             return "Error while Sending Mail";
         }
     }
 
+  
    
     @Override
     public String

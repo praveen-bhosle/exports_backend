@@ -92,6 +92,8 @@ class AuthController  {
                                                .httpOnly(true) 
                                                .path("/api/public/refresh")
                                                .maxAge(Duration.ofDays(7))
+                                               .secure(true)
+                                               .sameSite("None") 
                                                .build() ; 
         HttpHeaders headers = new HttpHeaders() ; 
         headers.add("Set-Cookie" ,  cookie.toString()) ; 

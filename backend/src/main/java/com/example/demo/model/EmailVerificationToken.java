@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
@@ -27,10 +29,16 @@ public class EmailVerificationToken {
     @JoinColumn(name="username", referencedColumnName="username")
     private User  user  ; 
     private String email ;
+    
+    private Instant expireInstant ; 
 
     public  EmailVerificationToken( String email   ,  User user  ) {  
         this.email = email ; 
         this.user = user ;
-        this.code =   UUID.randomUUID().toString() ; 
-    }
+        this.code =   UUID.randomUUID().toString() ;  
+        this.expireInstant = Instant.now().plus( 15 , ChronoUnit.MINUTES ) ; 
+    } 
+
+    
+
 }

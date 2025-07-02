@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.component.PaymentProperties;
 import com.example.demo.records.TransactionDTO;
 import com.example.demo.service.OrderService;
 import com.razorpay.Order;
@@ -23,17 +24,16 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/user/payment") 
 public class PaymentController {
 
-    private static final String KEY_ID = "rzp_test_ehxRg1TmkA0kFi"; 
-    private static final String KEY_SECRET = "PDuHjMBQE4iMBMdcVKbScw2J";  
+    @Autowired
+    private PaymentProperties paymentProperties ; 
 
     @Autowired 
     private OrderService orderService ; 
 
-
     @PostMapping("/create-order")
     public ResponseEntity<?> createOrder(@RequestParam("amount") int amount) throws RazorpayException {
         try { 
-        RazorpayClient razorpay = new RazorpayClient(KEY_ID, KEY_SECRET);
+        RazorpayClient razorpay = new RazorpayClient(paymentProperties.getId(), paymentProperties.getSecret());
         JSONObject orderRequest = new JSONObject();
         orderRequest.put("amount", amount * 100);
         orderRequest.put("currency", "INR");
@@ -55,7 +55,7 @@ public class PaymentController {
             String razorpayPaymentId =transactionDTO.razorpay_payment_id() ;
             String razorpaySignature = transactionDTO.razorpay_signatue() ;
             String signature = razorpayOrderId + "|" + razorpayPaymentId;
-            boolean isValid = Utils.verifySignature(signature, razorpaySignature, KEY_SECRET); 
+            boolean isValid = Utils.verifySignature(signature, razorpaySignature, paymentProperties.getSecret()); 
             System.err.println( "validation result : "  + isValid) ; 
             if (isValid) { 
                 orderService.ValidateOrder(orderId, transactionDTO);
@@ -75,9 +75,5 @@ public class PaymentController {
         }
     }
 
-    @PostMapping("/get-key")
-    public String getKey() {
-        return KEY_ID;
-    }
 
 }

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.dto.EmailDetails;
-import com.example.messaging_rabbitmq.utils.SerializationUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class RabbitMQService {
@@ -32,7 +32,8 @@ public class RabbitMQService {
         System.out.println("Received message: " + message  );  
         try{
           byte[] data =  message.getBody() ; 
-          EmailDetails emailDetails = SerializationUtil.deserialize(  data   ,  EmailDetails.class  ) ;
+          ObjectMapper objectMapper = new ObjectMapper() ;
+          EmailDetails emailDetails =  objectMapper.readValue(data, EmailDetails.class) ; 
           System.out.println("hi there");
           System.out.println("Email " + emailDetails.getReceiver() ) ; 
           String  response = emailService.sendSimpleMail(emailDetails) ; 
@@ -43,7 +44,6 @@ public class RabbitMQService {
         }
         catch( IOException | ClassNotFoundException e ) { 
             System.err.println("Deserialization failed: " + e.getClass().getSimpleName() + " - " + e.getMessage());
-            e.printStackTrace();
             System.err.println(e.getMessage());
             throw new AmqpRejectAndDontRequeueException("Fail and don't requeue");
         } catch( ClassCastException e  ) { 
