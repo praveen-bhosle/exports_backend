@@ -226,3 +226,160 @@
   * `400 Bad Request` if expired or malformed
   * `401 Unauthorized` if token doesn't match user
   * `500 Internal Server Error` on failure
+
+
+## **API Documentation: Admin Controllers**
+
+---
+
+### 1. **AdminOrderController**
+
+**Base URL:** `/api/admin/orders`
+
+#### GET `/all`
+
+* **Description:** Retrieve all orders.
+* **Response:**
+  * `202 Accepted` with a list of `Order`
+  * `500 Internal Server Error` on failure
+
+#### GET `/{id}`
+
+* **Description:** Retrieve a specific order by ID.
+* **Path Param:** `id` (String)
+* **Response:**
+  * `202 Accepted` with the `Order` object
+  * `400 Bad Request` if the ID is invalid
+
+---
+
+### 2. **AdminProductController**
+
+**Base URL:** `/api/admin/product`
+
+#### POST `/create`
+
+* **Description:** Create a new product.
+* **Request Body:** `Product`
+* **Response:**
+  * `200 OK` with the created `Product`
+  * `500 Internal Server Error` on failure
+
+#### GET `/`
+
+* **Description:** Get all products.
+* **Response:**
+  * `200 OK` with a list of `ProductDTO`
+
+#### GET `/{id}`
+
+* **Description:** Get product by ID.
+* **Path Param:** `id` (UUID)
+* **Response:**
+  * `200 OK` with the `Product`
+  * `404 Not Found` if product doesn't exist
+
+#### DELETE `/{id}`
+
+* **Description:** Delete a product by ID.
+* **Path Param:** `id` (UUID)
+* **Response:**
+  * `200 OK` on success
+  * `404 Not Found` on failure
+
+#### PUT `/edit`
+
+* **Description:** Update an existing product.
+* **Request Body:** `Product` (must include `id`)
+* **Response:**
+  * `200 OK` with the updated `Product`
+  * `500 Internal Server Error` on failure
+
+---
+
+## **API Documentation: Public Controllers**
+
+---
+
+### 3. **AuthController**
+
+**Base URL:** `/api/public`
+
+#### POST `/signup`
+
+* **Description:** Create a new user account.
+* **Request Body:** `AuthBody` (contains username and password)
+* **Response:**
+  * `201 Created` on success
+  * `409 Conflict` if username already exists
+  * `500 Internal Server Error` on failure
+
+#### POST `/login`
+
+* **Description:** Authenticate a user and return JWT access token and refresh token cookie.
+* **Request Body:** `AuthBody`
+* **Response:**
+  * `200 OK` with JWT access token and email
+  * `401 Unauthorized` if credentials are incorrect
+  * `500 Internal Server Error` on failure
+
+---
+
+### 4. **PublicProductController**
+
+**Base URL:** `/api/public/products`
+
+#### GET `/`
+
+* **Description:** Get all public products.
+* **Response:**
+  * `200 OK` with list of `ProductDTO`
+
+---
+
+### 5. **RefreshTokenController**
+
+**Base URL:** `/api/public/refresh`
+
+#### GET `/`
+
+* **Description:** Get a new access token using a refresh token from cookie.
+* **Cookie Required:** `refreshToken`
+* **Response:**
+  * `200 OK` with new access token
+  * `401 Unauthorized` if token is expired or invalid
+
+---
+
+### 6. **ResetPasswordController**
+
+**Base URL:** `/api/public/resetPassword`
+
+#### POST `/createOTP`
+
+* **Description:** Send a one-time password (OTP) to the email linked with the username.
+* **Query Param:** `username`
+* **Response:**
+  * `200 OK` if OTP sent successfully
+  * `400 Bad Request` if username or email not found
+
+#### POST `/verifyOTP`
+
+* **Description:** Verify the OTP for password reset.
+* **Query Params:**
+  * `code` (Long) – OTP code
+  * `id` (UUID) – OTP identifier
+* **Response:**
+  * `200 OK` with JWT token for reset
+  * `400 Bad Request` if OTP is incorrect or max retries exceeded
+  * `500 Internal Server Error` on failure
+
+#### POST `/reset`
+
+* **Description:** Reset the user’s password after OTP verification.
+* **Headers:** `reset-password-jwtToken`
+* **Query Param:** `password`
+* **Response:**
+  * `200 OK` if password is updated successfully
+  * `401 Unauthorized` if reset token is tampered
+  * `500 Internal Server Error` on failure
