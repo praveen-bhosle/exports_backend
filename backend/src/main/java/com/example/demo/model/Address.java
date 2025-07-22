@@ -40,7 +40,7 @@ public class Address {
     @NotNull
     private String country      ; 
     @NotNull
-    private Boolean isDefault   ; 
+    private Boolean isDefault  = false   ; 
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_username" ,referencedColumnName="username") 

@@ -35,27 +35,40 @@ public  List<AddressDTO>  getAddresses() {
     return  addresses ; 
 }
 
+
+public void  editExistingDefaultAddress() { 
+    String username = GetUsername.getUsername() ;
+    List<Address> userAddresses = addressRepository.findAllByUserUsername(username) ;  
+    boolean found = false ;
+    for ( Address address : userAddresses) { 
+        if(found) break ;  
+        if ( address.getIsDefault() == true ) { 
+            address.setIsDefault(false);
+            addressRepository.save(address) ;
+            found = true ; 
+        } 
+    }
+}
  
 public  void   createAddress( AddressDTO addressDTO ) { 
     String username = GetUsername.getUsername() ; 
-    User user = userRepository.findByUsername(username) ;     
+    User user = userRepository.findByUsername(username) ;   
+    if(addressDTO.isDefault()) { editExistingDefaultAddress(); }  
     Address address = addressMapper.toAddress(addressDTO) ; 
     address.setUser(user);
     addressRepository.save(address) ; 
 }
 
 public void   editAddress(AddressDTO addressDTO) {  
-   // Long id = addressDTO.id() ; 
     String username = GetUsername.getUsername() ;  
     User user = userRepository.findByUsername(username) ;   
+    if(addressDTO.isDefault()) { editExistingDefaultAddress(); }
     Address newAddress  = addressMapper.toAddress(addressDTO) ;  
-   // newAddress.setId(id) ; 
     newAddress.setUser(user);
     addressRepository.save(newAddress) ; 
 }
 
 public  void  deleteAddress( UUID id  )  {  
-
     Address address = addressRepository.findById(id).orElse(null)  ;  
     if(address!= null ) addressRepository.delete(address);  
 }
